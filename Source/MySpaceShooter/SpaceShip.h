@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "SpaceGameMode.h"
 #include "SpaceShip.generated.h"
 
 UCLASS()
@@ -27,6 +28,8 @@ protected:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	ASpaceGameMode* GameMode;
 	
 	UPROPERTY(BlueprintReadWrite, Category="Movement")
 	FVector LastMoveDirection;
@@ -42,7 +45,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	class UInputAction* FireAction;
-	
+
+	UFUNCTION()
+	void OnOverlapWithAsteroid(UPrimitiveComponent* OverlappedComponent,
+							   AActor* OtherActor,
+							   UPrimitiveComponent* OtherComp,
+							   int32 OtherBodyIndex,
+							   bool bFromSweep,
+							   const FHitResult& SweepResult);
 private:
 	void MoveForward(const FInputActionValue& Value);
 	
@@ -63,4 +73,6 @@ private:
 	float FireRate = 0.2f; // 0.2s entre chaque tir
 
 	float LastFireTime = -100.f;
+
+	int life = 3;
 };
