@@ -31,4 +31,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsInsidePlayArea(const FVector& Location) const;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
+	TSubclassOf<UUserWidget> GameOverWidgetClass;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowGameOver();
 };

@@ -121,12 +121,21 @@ void ASpaceShip::OnOverlapWithAsteroid(UPrimitiveComponent* OverlappedComponent,
 
 		life--;
 
-		if (life == 0)
+		if (life <= 0)
 		{
-			Destroy();
-		}
+			if (GameMode)
+			{
+				GameMode->ShowGameOver();
+			}
 
+			ShipMesh->SetVisibility(false, true);
+			SetActorEnableCollision(false);
+			DisableInput(Cast<APlayerController>(GetController()));
+		}
+		
 		HitAsteroid->Destroy();
+
+		Combo = 1.f;
 	}
 }
 

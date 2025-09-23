@@ -2,6 +2,8 @@
 
 
 #include "SpaceGameMode.h"
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 ASpaceGameMode::ASpaceGameMode()
 {
@@ -19,4 +21,22 @@ bool ASpaceGameMode::IsInsidePlayArea(const FVector& Location) const
 {
 	return Location.X >= MinX && Location.X <= MaxX &&
 		   Location.Y >= MinY && Location.Y <= MaxY;
+}
+
+void ASpaceGameMode::ShowGameOver()
+{
+	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	if (!PC || !GameOverWidgetClass) return;
+
+	UUserWidget* GameOverWidget = CreateWidget<UUserWidget>(PC, GameOverWidgetClass);
+	if (GameOverWidget)
+	{
+		GameOverWidget->AddToViewport();
+
+		FInputModeUIOnly InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		PC->SetInputMode(InputMode);
+		PC->bShowMouseCursor = true;
+		PC->SetPause(true);
+	}
 }

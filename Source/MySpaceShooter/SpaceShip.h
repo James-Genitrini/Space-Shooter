@@ -19,6 +19,15 @@ public:
 	// Sets default values for this pawn's properties
 	ASpaceShip();
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Gameplay")
+	int Score = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Gameplay")
+	float Combo = 1.f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Gameplay")
+	int life = 3;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -73,6 +82,4 @@ private:
 	float FireRate = 0.2f; // 0.2s entre chaque tir
 
 	float LastFireTime = -100.f;
-
-	int life = 3;
 };

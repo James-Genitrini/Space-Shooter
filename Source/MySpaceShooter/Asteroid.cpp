@@ -38,6 +38,8 @@ void AAsteroid::BeginPlay()
     GameMode = Cast<ASpaceGameMode>(GetWorld()->GetAuthGameMode());
 
     life = FMath::RandRange(1, 5);
+    baseLife = life;
+    
     UE_LOG(LogTemp, Warning, TEXT("Life is %d"), life);
 
     Spaceship = Cast<ASpaceShip>(UGameplayStatics::GetActorOfClass(GetWorld(), ASpaceShip::StaticClass()));
@@ -89,6 +91,16 @@ void AAsteroid::TakeDamageFromMissile()
 
         if (life == 0)
         {
+            if (Spaceship)
+            {
+                Spaceship->Score += FMath::RoundToInt(getDestructionScore() * Spaceship->Combo);
+
+                if (Spaceship->Combo < 5.f)
+                {
+                    Spaceship->Combo += 0.1f;
+                }
+            }
+            
             Destroy();
         }
     }
@@ -100,6 +112,11 @@ void AAsteroid::ResetColor()
     {
         DynMaterial->SetVectorParameterValue("TintColor", FLinearColor::White);
     }
+}
+
+int AAsteroid::getDestructionScore()
+{
+    return ScoreValue * baseLife;
 }
 
 void AAsteroid::Tick(float DeltaTime)

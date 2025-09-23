@@ -39,6 +39,13 @@ public:
 
 	void ResetColor();
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Gameplay")
+	int ScoreValue = 100;
+	
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Gameplay")
+	int baseLife;
+	
 private:
 	int life;
 
@@ -46,6 +53,8 @@ private:
 
 	ASpaceShip* Spaceship;
 
+	int getDestructionScore();
+	
 	// UFUNCTION()
 	// void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
