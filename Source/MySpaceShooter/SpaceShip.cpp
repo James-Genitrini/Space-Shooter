@@ -3,17 +3,27 @@
 
 #include "SpaceShip.h"
 
+#include "Asteroid.h"
 #include "Missile.h"
+#include "SpaceGameMode.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASpaceShip::ASpaceShip()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComponent = Root;
+
 	ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
-	RootComponent = ShipMesh;
+	ShipMesh->SetupAttachment(Root);
+
+	ShipMesh->SetGenerateOverlapEvents(true);
+	ShipMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic")); // ou un profil custom qui bloque l'astéroïde en overlap
+	ShipMesh->OnComponentBeginOverlap.AddDynamic(this, &ASpaceShip::OnOverlapWithAsteroid);
 
 	// Mouvement
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
@@ -29,24 +39,14 @@ void ASpaceShip::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GameMode = Cast<ASpaceGameMode>(GetWorld()->GetAuthGameMode());
+
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(InputMappingContext, 0);
 		}
-	}
-}
-
-// Called every frame
-void ASpaceShip::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	// On normalise pour n'avoir que la direction
-	if (!LastMoveDirection.IsNearlyZero())
-	{
-		LastMoveDirection = LastMoveDirection.GetSafeNormal();
 	}
 }
 
@@ -113,5 +113,64 @@ void ASpaceShip::FireMissile()
 
 	GetWorld()->SpawnActor<AMissile>(MissileClass, SpawnLocation, SpawnRotation, SpawnParams);
 
-	LastFireTime = CurrentTime; // met à jour le dernier tir
+	LastFireTime = CurrentTime;
+}
+
+void ASpaceShip::OnOverlapWithAsteroid(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+									   int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (AAsteroid* HitAsteroid = Cast<AAsteroid>(OtherActor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SpaceShip overlaps Asteroid!"));
+
+		life--;
+
+		if (ImpactFX)
+		{
+			FVector SpawnLocation = GetActorLocation();
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactFX, SpawnLocation, FRotator::ZeroRotator);
+
+		}
+		if (life <= 0)
+		{
+			if (GameMode)
+			{
+				GameMode->ShowGameOver();
+			}
+
+			ShipMesh->SetVisibility(false, true);
+			SetActorEnableCollision(false);
+			DisableInput(Cast<APlayerController>(GetController()));
+		}
+		
+		HitAsteroid->Destroy();
+
+		Combo = 1.f;
+	}
+}
+
+// Called every frame
+void ASpaceShip::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// On normalise pour n'avoir que la direction
+	if (!LastMoveDirection.IsNearlyZero())
+	{
+		LastMoveDirection = LastMoveDirection.GetSafeNormal();
+	}
+
+	FRotator TargetRotation = LastMoveDirection.Rotation();
+
+	TargetRotation.Yaw += 90.f;
+	
+	ShipMesh->SetWorldRotation(TargetRotation);
+
+	if (GameMode)
+	{
+		FVector Location = GetActorLocation();
+		Location.X = FMath::Clamp(Location.X, GameMode->MinXPawn, GameMode->MaxXPawn);
+		Location.Y = FMath::Clamp(Location.Y, GameMode->MinYPawn, GameMode->MaxYPawn);
+		SetActorLocation(Location);
+	}
 }

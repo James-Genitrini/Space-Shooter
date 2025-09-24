@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SpaceGameMode.h"
 #include "Missile.generated.h"
 
 UCLASS()
@@ -19,6 +20,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	ASpaceGameMode* GameMode;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -33,4 +36,14 @@ public:
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 			   UPrimitiveComponent* OtherComp, FVector NormalImpulse,
 			   const FHitResult& Hit);
+
+	UFUNCTION()
+	void OnOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+
 };
