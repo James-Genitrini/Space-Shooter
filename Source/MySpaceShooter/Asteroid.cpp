@@ -34,9 +34,7 @@ AAsteroid::AAsteroid()
 void AAsteroid::BeginPlay()
 {
     Super::BeginPlay();
-
-    GameMode = Cast<ASpaceGameMode>(GetWorld()->GetAuthGameMode());
-
+    
     life = FMath::RandRange(1, 5);
     baseLife = life;
     
@@ -46,8 +44,17 @@ void AAsteroid::BeginPlay()
 
     if (Spaceship && ProjectileMovementComponent)
     {
-        FVector steering = Seek(Spaceship->GetActorLocation());
-        ProjectileMovementComponent->Velocity = steering;
+        float RandomSpeed = FMath::FRandRange(100.f, 400.f);
+
+        ProjectileMovementComponent->InitialSpeed = RandomSpeed;
+        ProjectileMovementComponent->MaxSpeed     = RandomSpeed;
+
+        if (Spaceship)
+        {
+            FVector steering = Seek(Spaceship->GetActorLocation());
+            steering.Normalize();
+            ProjectileMovementComponent->Velocity = steering * RandomSpeed;
+        }
     }
 
     if (AsteroidMesh)
@@ -58,7 +65,16 @@ void AAsteroid::BeginPlay()
             DynMaterial = UMaterialInstanceDynamic::Create(BaseMat, this);
             AsteroidMesh->SetMaterial(0, DynMaterial);
         }
+
+        FVector RandomScale(
+            FMath::FRandRange(1.f, 4.f),
+            FMath::FRandRange(1.f, 4.f),
+            FMath::FRandRange(1.f, 4.f)
+        );
+        AsteroidMesh->SetWorldScale3D(RandomScale);
     }
+
+    GameMode = Cast<ASpaceGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 FVector AAsteroid::Seek(const FVector& TargetPosition)
