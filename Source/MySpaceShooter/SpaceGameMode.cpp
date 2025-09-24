@@ -11,10 +11,10 @@ ASpaceGameMode::ASpaceGameMode()
 	// MaxX = 600.f;
 	// MinY = -2200.f;
 	// MaxY = 2200.f;
-	MinX = -2400.f;
+	MinX = -2100.f;
 	MaxX = 1200.f;
-	MinY = -2600.f;
-	MaxY = 3000.f;
+	MinY = -2500.f;
+	MaxY = 2600.f;
 	MinXPawn = -1500.f;
 	MaxXPawn = 600.f;
 	MinYPawn = -1900.f;

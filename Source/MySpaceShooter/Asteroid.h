@@ -36,16 +36,15 @@ public:
 
 	UPROPERTY()
 	UMaterialInstanceDynamic* DynMaterial;
-
-	void ResetColor();
-
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Gameplay")
 	int ScoreValue = 100;
 	
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Gameplay")
 	int baseLife;
-	
+
+	UPROPERTY(EditAnywhere, Category="Effects")
+	UParticleSystem* ImpactFX;
 private:
 	int life;
 

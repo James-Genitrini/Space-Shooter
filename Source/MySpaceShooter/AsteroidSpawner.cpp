@@ -38,13 +38,13 @@ FVector AAsteroidSpawner::GetRandomEdgePoint() const
 	switch (Side)
 	{
 		case 0:
-			return FVector(MinX, FMath::FRandRange(MinY, MaxY), GetActorLocation().Z); // gauche
+			return FVector(MinX, FMath::FRandRange(MinY, MaxY), GetActorLocation().Z);
 		case 1:
-			return FVector(MinX, FMath::FRandRange(MinY, MaxY), GetActorLocation().Z); // droite
+			return FVector(MaxX, FMath::FRandRange(MinY, MaxY), GetActorLocation().Z);
 		case 2:
-			return FVector(FMath::FRandRange(MinX, MaxX), MinY, GetActorLocation().Z); // bas
+			return FVector(FMath::FRandRange(MinX, MaxX), MinY, GetActorLocation().Z);
 	default:
-			return FVector(FMath::FRandRange(MinX, MaxX), MaxX, GetActorLocation().Z); // haut
+			return FVector(FMath::FRandRange(MinX, MaxX), MaxY, GetActorLocation().Z);
 	}
 }
 

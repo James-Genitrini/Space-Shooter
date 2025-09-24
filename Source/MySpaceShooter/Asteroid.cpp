@@ -61,13 +61,6 @@ void AAsteroid::BeginPlay()
 
     if (AsteroidMesh)
     {
-        UMaterialInterface* BaseMat = AsteroidMesh->GetMaterial(0);
-        if (BaseMat)
-        {
-            DynMaterial = UMaterialInstanceDynamic::Create(BaseMat, this);
-            AsteroidMesh->SetMaterial(0, DynMaterial);
-        }
-
         FVector RandomScale(
             FMath::FRandRange(1.f, 2.f),
             FMath::FRandRange(1.f, 2.f),
@@ -93,20 +86,13 @@ void AAsteroid::TakeDamageFromMissile()
     {
         life--;
 
-        if (DynMaterial)
+        if (ImpactFX)
         {
-            DynMaterial->SetVectorParameterValue("TintColor", FLinearColor::Red);
+            FVector SpawnLocation = GetActorLocation();
+            UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactFX, SpawnLocation, FRotator::ZeroRotator);
 
-            FTimerHandle Timer;
-            GetWorldTimerManager().SetTimer(
-                Timer,
-                this,
-                &AAsteroid::ResetColor,
-                0.2f,
-                false
-            );
         }
-
+        
         if (life == 0)
         {
             if (Spaceship)
@@ -121,14 +107,6 @@ void AAsteroid::TakeDamageFromMissile()
             
             Destroy();
         }
-    }
-}
-
-void AAsteroid::ResetColor()
-{
-    if (DynMaterial)
-    {
-        DynMaterial->SetVectorParameterValue("TintColor", FLinearColor::White);
     }
 }
 

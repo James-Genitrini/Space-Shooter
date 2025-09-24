@@ -8,6 +8,7 @@
 #include "SpaceGameMode.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASpaceShip::ASpaceShip()
@@ -124,6 +125,12 @@ void ASpaceShip::OnOverlapWithAsteroid(UPrimitiveComponent* OverlappedComponent,
 
 		life--;
 
+		if (ImpactFX)
+		{
+			FVector SpawnLocation = GetActorLocation();
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactFX, SpawnLocation, FRotator::ZeroRotator);
+
+		}
 		if (life <= 0)
 		{
 			if (GameMode)

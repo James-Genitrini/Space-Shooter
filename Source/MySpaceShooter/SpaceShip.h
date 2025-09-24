@@ -82,4 +82,7 @@ private:
 	float FireRate = 0.2f; // 0.2s entre chaque tir
 
 	float LastFireTime = -100.f;
+
+	UPROPERTY(EditAnywhere, Category="Effects")
+	UParticleSystem* ImpactFX;
 };
