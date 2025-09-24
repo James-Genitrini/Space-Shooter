@@ -111,7 +111,7 @@ void AAsteroid::TakeDamageFromMissile()
             {
                 Spaceship->Score += FMath::RoundToInt(getDestructionScore() * Spaceship->Combo);
 
-                if (Spaceship->Combo < 5.f)
+                if (Spaceship->Combo <= 5.f)
                 {
                     Spaceship->Combo += 0.1f;
                 }
