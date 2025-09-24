@@ -29,6 +29,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayArea");
 	float MaxY;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayArea");
+	float MinXPawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayArea");
+	float MaxXPawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayArea");
+	float MinYPawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayArea");
+	float MaxYPawn;
+	
 	UFUNCTION(BlueprintCallable)
 	bool IsInsidePlayArea(const FVector& Location) const;
 

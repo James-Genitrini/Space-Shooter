@@ -153,8 +153,8 @@ void ASpaceShip::Tick(float DeltaTime)
 	if (GameMode)
 	{
 		FVector Location = GetActorLocation();
-		Location.X = FMath::Clamp(Location.X, GameMode->MinX, GameMode->MaxX);
-		Location.Y = FMath::Clamp(Location.Y, GameMode->MinY, GameMode->MaxY);
+		Location.X = FMath::Clamp(Location.X, GameMode->MinXPawn, GameMode->MaxXPawn);
+		Location.Y = FMath::Clamp(Location.Y, GameMode->MinYPawn, GameMode->MaxYPawn);
 		SetActorLocation(Location);
 	}
 }
