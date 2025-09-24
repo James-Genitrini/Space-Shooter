@@ -14,6 +14,8 @@ AAsteroid::AAsteroid()
     USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
     RootComponent = Root;
 
+    RootComponent->SetMobility(EComponentMobility::Movable);
+
     AsteroidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AsteroidMesh"));
     AsteroidMesh->SetupAttachment(Root);
 
@@ -67,9 +69,9 @@ void AAsteroid::BeginPlay()
         }
 
         FVector RandomScale(
-            FMath::FRandRange(1.f, 4.f),
-            FMath::FRandRange(1.f, 4.f),
-            FMath::FRandRange(1.f, 4.f)
+            FMath::FRandRange(1.f, 2.f),
+            FMath::FRandRange(1.f, 2.f),
+            FMath::FRandRange(1.f, 2.f)
         );
         AsteroidMesh->SetWorldScale3D(RandomScale);
     }

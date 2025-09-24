@@ -14,8 +14,11 @@ ASpaceShip::ASpaceShip()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComponent = Root;
+
 	ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
-	RootComponent = ShipMesh;
+	ShipMesh->SetupAttachment(Root);
 
 	ShipMesh->SetGenerateOverlapEvents(true);
 	ShipMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic")); // ou un profil custom qui bloque l'astéroïde en overlap
@@ -149,6 +152,12 @@ void ASpaceShip::Tick(float DeltaTime)
 	{
 		LastMoveDirection = LastMoveDirection.GetSafeNormal();
 	}
+
+	FRotator TargetRotation = LastMoveDirection.Rotation();
+
+	TargetRotation.Yaw += 90.f;
+	
+	ShipMesh->SetWorldRotation(TargetRotation);
 
 	if (GameMode)
 	{
