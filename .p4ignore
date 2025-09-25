@@ -1,0 +1,37 @@
+# Binaries
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+*.xcodeproj
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.pdb
+*.log
+*.vsconfig
+
+# Mac specific
+*.DS_Store
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+
+# Unreal auto-generated
+*.opensdf
+*.sdf
+*.suo
+*.log
+*.user
+*.userprefs
+
+# Plugins
+Plugins/*/Intermediate/
+Plugins/*/Binaries/
+
+# Other temp files
+*.tmp
+*.temp
